@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title>Edit Flashcards Page</title>
+    <link th:href="@{/css/flashcards/edit.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div layout:fragment="content">
+
+        <!-- Delete / Add new Tag -->
+        <div class="container mt-3">
+
+            <!-- Add new Tag button -->
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTagModal">Add new tag</button>
+
+            <!-- Delete Tag button -->
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTagModal">Delete tag</button>
+
+            <!-- Add new Tag Modal -->
+            <div class="modal" id="addTagModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+
+                            <form id="addTagForm" method="post" th:action="@{/tags/add}" >
+
+                                <div class="form-group">
+                                    <label for="inputName">Name</label>
+                                    <input type="text" id="inputName" name="name" class="form-control">
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button form="addTagForm" type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Tag Modal -->
+            <div class="modal" id="deleteTagModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="scrollable-div">
+                                    <div th:each="tag : ${tags}" class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title" th:text="${tag.name}"></h5>
+                                            <form th:action="@{/tags/delete/{tagId}(tagId=${tag.getId()})}" method="post">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Add new Flashcard -->
+        <div class="container mt-3">
+
+            <!-- Add new Flashcard button -->
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFlashcardModal">Add new flashcard</button>
+
+            <!-- Add new Flashcard Modal -->
+            <div class="modal" id="addFlashcardModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Flashcard Creation</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+
+                            <form id="addFlashcardForm" method="post" th:action="@{/flashcards/add}" >
+
+                                <div class="form-group">
+                                    <label for="inputFront">Front</label>
+                                    <input type="text" id="inputFront" name="front" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputBack">Back</label>
+                                    <input type="text" id="inputBack" name="back" class="form-control">
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button form="addFlashcardForm" type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Flashcards Table -->
+        <div class="container mt-3">
+            <div class="table-responsive-sm">
+                <table class="table table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Front</th>
+                            <th>Back</th>
+                            <th>Tags</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tr th:each="flashcard : ${flashcards}">
+                        <td class="scrollable-cell" th:text="${flashcard.getFront()}"></td>
+                        <td class="scrollable-cell" th:text="${flashcard.getBack()}"></td>
+
+                        <td class="scrollable-cell">
+                            <div class="d-flex justify-content-start">
+
+                                <div th:each="tag : ${flashcard.getTags()}">
+                                    <form th:action="@{/flashcards/{flashcardId}/remove-tag/{tagId}(flashcardId=${flashcard.getId()}, tagId=${tag.getId()})}" method="post">
+                                        <button type="submit" class="btn btn-info btn-tag-hover" th:text="${tag.getName()}" style="margin-right: 10px;"></button>
+                                    </form>
+                                </div>
+
+                                <!-- Add Tag to Flashcard Button -->
+                                <button class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target='#addTagToFlashcardModal-' + ${flashcard.getId()}">+</button>
+
+                                <!-- Add Tag to Flashcard Modal -->
+                                <div class="modal" th:id="'addTagToFlashcardModal-' + ${flashcard.getId()}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <div class="container">
+                                                    <div class="scrollable-div">
+                                                        <div th:each="tag : ${tags}">
+
+                                                            <div th:if="${!#lists.contains(flashcard.getTags(), tag)}" class="card mb-3">
+                                                                <div class="card-body text-center">
+                                                                    <h5 class="card-title" th:text="${tag.getName()}"></h5>
+                                                                </div>
+
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item text-center d-flex justify-content-around">
+                                                                        <form th:action="@{/flashcards/{flashcardId}/add-tag/{tagId}(flashcardId=${flashcard.getId()}, tagId=${tag.getId()})}" method="post">
+                                                                            <button type="submit" class="btn btn-primary">+</button>
+                                                                        </form>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td>
+                            <form th:action="@{/flashcards/delete/{id}(id=${flashcard.getId()})}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

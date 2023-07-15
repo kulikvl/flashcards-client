@@ -1,0 +1,20 @@
+.scrollable-cell {
+    max-height: 200px; /* Adjust as needed */
+    min-width: 100px;
+    max-width: 300px; /* Adjust as needed */
+    overflow-y: auto; /* Enable vertical scrollbar */
+    overflow-x: auto; /* Enable horizontal scrollbar */
+}
+
+/* Normal button color */
+.btn-tag-hover {
+    color: white; /* Text color */
+    white-space: nowrap;
+}
+
+/* Change color on mouse over */
+.btn-tag-hover:hover {
+    background-color: #ee596b; /* Change color to your liking */
+    border-color: #ee596b;
+    color: white; /* Text color */
+}

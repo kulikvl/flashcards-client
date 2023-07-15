@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+  <title>Study Flashcards Page</title>
+  <link th:href="@{/css/flashcards/study.css}" rel="stylesheet">
+</head>
+
+<body>
+  <div layout:fragment="content">
+
+    <!-- Tags filtering -->
+    <div class="container mt-3">
+
+      <!-- Display Tags -->
+      <div class="tags-scrollable">
+        <div th:each="tag : ${tags}" class="card tag-card">
+          <div class="card-body text-center">
+            <h5 class="card-title" th:text="${tag.name}"></h5>
+          </div>
+
+          <ul class="list-group list-group-flush">
+
+            <li class="list-group-item text-center d-flex justify-content-around">
+              <div th:if="${session.activeTags == null or #arrays.contains(session.activeTags, tag.getId()) == false}">
+                <form th:action="@{/tags/apply/{id}(id=${tag.getId()})}" method="post">
+                  <button type="submit" class="btn btn-primary">Apply</button>
+                </form>
+              </div>
+              <div th:unless="${session.activeTags == null or #arrays.contains(session.activeTags, tag.getId()) == false}">
+                <button type="submit" class="btn btn-success">Applied</button>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- Clear filtering -->
+      <div class="mb-3 mt-3">
+        <form th:action="@{/tags/clear}" method="post">
+          <button type="submit" class="btn btn-primary">Clear tags</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Flashcards interactive -->
+    <div class="container-fluid mt-3">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mb-3" th:each="flashcard : ${flashcards}">
+          <div class="flip-card">
+            <div class="flip-card-inner">
+
+              <div class="flip-card-front">
+                <p th:text="${flashcard.getFront()}"></p>
+              </div>
+
+              <div class="flip-card-back">
+                <p th:text="${flashcard.getBack()}"></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

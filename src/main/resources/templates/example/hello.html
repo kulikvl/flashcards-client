@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Home Page</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+  <header th:insert="example_layout :: site-header"></header>
+
+  <main th:replace="example_layout :: content">
+    <h2>Welcome to our website!</h2>
+    <p>This is the home page content</p>
+  </main>
+
+  <footer th:insert="example_layout :: site-footer"></footer>
+</body>
+
+</html>

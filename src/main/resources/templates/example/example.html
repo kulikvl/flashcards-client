@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <title>My Example Title</title>
+
+    <link th:href = "@{/css/main.css}" rel = "stylesheet">
+
+    <script type = "text/javascript" th:src = "@{/js/actions.js}"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
+
+
+</head>
+
+<body>
+    <h1 th:text = "'LOL ' + ${message} + ' KEK'"></h1>
+
+    <h2> Heading </h2>
+
+    <p> This is text on which we want to apply <strong> very special </strong> styling </p>
+
+    <button type="button" th:onclick="demo()">Show Alert</button>
+
+    <div class = "myClass1">This is div element with class "myClass1"</div>
+    <div class = "myClass2">This is div element with class "myClass2"</div>
+    <div class = "myClass2 myClass1">This is div element with class "myClass2 and 1"</div>
+
+<!--  This div has two Bootstrap classes. The alert class styles the div as an alert box, and alert-warning gives it a specific color and style for warning alerts.  -->
+    <div class="alert alert-warning">This is a warning alert with Bootstrap.</div>
+
+    <div class = "container">
+        <div class = "row">
+            <table class = "table table-responsive table-bordered .table-striped">
+                <thead>
+                    <tr>
+                        <th>A</th>
+                        <th>B</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>C1</td>
+                        <td>D1</td>
+                    </tr>
+                    <tr>
+                        <td>C2</td>
+                        <td>D2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class = "container">
+        <div class = "row">
+            <table class = "table table-responsive table-bordered .table-striped">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "employees : ${employees}">
+                        <td th:text = "${employees.firstName}"></td>
+                        <td th:text = "${employees.lastName}"></td>
+                        <td th:text = "${employees.email}"></td>
+                    </tr>
+
+                    <tr th:each = "employees : ${employees}"
+                        th:style = "${employeesStat.odd}? 'font-weight:bold;'"
+                        th:alt-title = "${employeesStat.even}? 'even' : 'odd'">
+                        <td th:text = "${employees.firstName}"></td>
+                        <td th:text = "${employees.lastName}"></td>
+                        <td th:text = "${employees.email}"></td>
+                    </tr>
+
+                    <tr th:each = "employee : ${employees}">
+<!--                        <td th:text = "${employees.firstName}"></td>-->
+                        <td>
+                            <a class = "btn btn-primary" th:if = "${employee.firstName} == 'Vova'">ULALA</a>
+                            <a class = "btn btn-danger" th:if = "${employee.firstName} == 'Vova'">OHNO</a>
+                            <a class = "btn btn-primary" th:unless = "${employee.firstName} == 'Vova'">OHYES</a>
+                        </td>
+
+                        <td th:text = "${employee.lastName}"></td>
+                        <td th:text = "${employee.email}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+</body>
+
+</html>

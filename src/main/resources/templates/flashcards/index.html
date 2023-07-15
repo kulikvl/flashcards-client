@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+    <head>
+        <title>Flashcards Page</title>
+        <link th:href="@{/css/flashcards.css}" rel="stylesheet">
+    </head>
+
+    <body>
+        <div layout:fragment="content">
+
+            <div class="container mt-3">
+                <!-- Add Flashcard button -->
+                <button class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target='#addFlashcardModal'">Add new flashcard</button>
+
+                <!-- Add Flashcard Modal -->
+                <div class="modal" th:id="'addFlashcardModal'">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Flashcard Creation</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+
+                                <form th:id="'addFlashcardForm'" method="post" th:action="@{/flashcards/add}" >
+
+                                    <div class="form-group">
+                                        <label for="front_id">Front</label>
+                                        <input type="text" id="front_id" name="front" class="form-control">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="back_id">Back</label>
+                                        <input type="text" id="back_id" name="back" class="form-control">
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button th:form="'addFlashcardForm'" type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="container mt-3">
+                <div class="tags-scrollable">
+
+                    <div th:each="tag : ${tags}" class="card tag-card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title" th:text="${tag.name}"></h5>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+
+                            <li class="list-group-item text-center d-flex justify-content-around">
+                                <form th:action="@{/tags/delete/{id}(id=${tag.getId()})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                <div th:if="${session.activeTags == null or #arrays.contains(session.activeTags, tag.getId()) == false}">
+                                    <form th:action="@{/tags/apply/{id}(id=${tag.getId()})}" method="post">
+                                        <button type="submit" class="btn btn-primary">Apply</button>
+                                    </form>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="card tag-card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">New tag</h5>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-center d-flex justify-content-around">
+                                <button class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target='#addTagModal'">+</button>
+
+                                <!-- The Modal -->
+                                <div class="modal" th:id="'addTagModal'">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+
+                                                <form th:id="'addTagForm'" method="post" th:action="@{/tags/add}" >
+
+                                                    <div class="form-group">
+                                                        <label for="name_id">Name</label>
+                                                        <input type="text" id="name_id" name="name" class="form-control">
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button th:form="'addTagForm'" type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <form th:action="@{/tags/clear}" method="post">
+                        <button type="submit" class="btn btn-primary">Clear tags</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Flashcards -->
+            <div class="container-fluid mt-5">
+
+                <div class="card text-center">
+                    <div class="card-header">
+                        Featured
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        2 days ago
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4 mb-3" th:each="flashcard : ${flashcards}">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <p>jfdklsjfdskl;vndafoi;nvia</p>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h1>John Doe</h1>
+                                    <p>Architect & Engineer</p>
+                                    <p>We love that guy</p>
+                                    <form th:action="@{/flashcards/delete/{id}(id=${flashcard.getId()})}" method="post">
+                                        <button type="submit" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Flashcards Table -->
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Front</th>
+                            <th>Back</th>
+                            <th>Author</th>
+                            <th></th>
+                            <th>Tags</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tr th:each="flashcard : ${flashcards}">
+                            <td th:text="${flashcard.getFront()}"></td>
+                            <td th:text="${flashcard.getBack()}"></td>
+                            <td th:text="${flashcard.getAuthorUsername()}"></td>
+
+                            <td>
+                                <form th:action="@{/flashcards/delete/{id}(id=${flashcard.getId()})}" method="post">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <div th:each="tag : ${flashcard.getTags()}">
+                                    <div class="card" style="width:200px">
+                                        <div class="card-body">
+                                            <h1 class="card-title" th:text="${tag.getName()}">Tagfsdf</h1>
+                                            <form th:action="@{flashcards/{flashcardId}/removeTag/{tagId}(flashcardId=${flashcard.getId()}, tagId=${tag.getId()})}" method="post">
+                                                <button type="submit" class="btn btn-danger">-</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target='#addTagToFlashcardModal-' + ${flashcard.getId()}">Add tag</button>
+
+                                <!-- The Modal -->
+                                <div class="modal" th:id="'addTagToFlashcardModal-' + ${flashcard.getId()}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Tag adding</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <div class="container">
+                                                    <div class="scrollable-div">
+                                                        <div th:each="tag : ${tags}" class="card">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title" th:text="${tag.name}">Tag name</h5>
+                                                                <form th:action="@{flashcards/{flashcardId}/addTag/{tagId}(flashcardId=${flashcard.getId()}, tagId=${tag.getId()})}" method="post">
+                                                                    <button type="submit" class="btn btn-primary">+</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </body>
+
+</html>

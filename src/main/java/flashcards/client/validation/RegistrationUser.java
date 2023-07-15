@@ -1,18 +1,20 @@
-package flashcards.client.model;
+package flashcards.client.validation;
 
-public class UserDto {
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+public class RegistrationUser {
+
+    @NotNull(message = "is required")
+    @Size(min = 1, message = "is required")
     private String username;
 
+    @NotNull(message = "is required")
+    @Size(min = 3, message = "- must be at least 3 symbols long")
     private String password;
 
-    public UserDto() {
+    public RegistrationUser() {
 
-    }
-
-    public UserDto(String username, String password) {
-        this.username = username;
-        this.password = password;
     }
 
     public String getUsername() {
@@ -31,10 +33,9 @@ public class UserDto {
         this.password = password;
     }
 
-
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "RegistrationUser{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

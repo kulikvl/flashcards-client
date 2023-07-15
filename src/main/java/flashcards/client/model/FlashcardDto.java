@@ -1,6 +1,5 @@
 package flashcards.client.model;
 
-import java.util.Collection;
 import java.util.Set;
 
 public class FlashcardDto {
@@ -13,7 +12,7 @@ public class FlashcardDto {
 
     private String authorUsername;
 
-    private Collection<TagDto> tags;
+    private Set<TagDto> tags;
 
     public Long getId() {
         return id;
@@ -47,11 +46,11 @@ public class FlashcardDto {
         this.authorUsername = authorUsername;
     }
 
-    public Collection<TagDto> getTags() {
+    public Set<TagDto> getTags() {
         return tags;
     }
 
-    public void setTags(Collection<TagDto> tags) {
+    public void setTags(Set<TagDto> tags) {
         this.tags = tags;
     }
 }

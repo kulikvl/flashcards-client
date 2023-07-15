@@ -16,16 +16,11 @@ import java.util.Collection;
 @Component
 public class FlashcardClient {
 
-    private Client client;
-
-    private String apiUrl;
-
-    private WebTarget flashcardsEndpoint;
+    private final WebTarget flashcardsEndpoint;
 
     @Autowired
     public FlashcardClient(@Value("${server.url}") String apiUrl) {
-        this.apiUrl = apiUrl;
-        client = ClientBuilder.newClient();
+        Client client = ClientBuilder.newClient();
         client.register(new HttpBasicAuthFilter());
         flashcardsEndpoint = client.target(apiUrl + "/users/{id}/flashcards");
     }
@@ -38,43 +33,30 @@ public class FlashcardClient {
 
     public Collection<FlashcardDto> readAll() {
         Response response = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE).get();
-
-        if (response.getStatus() == 200) {
-            return Arrays.asList(response.readEntity(FlashcardDto[].class));
-        } else {
-            throw new RuntimeException(response.getStatus() + " " + response.getStatusInfo().getReasonPhrase());
-        }
+        return Arrays.asList(response.readEntity(FlashcardDto[].class));
     }
 
     public Collection<FlashcardDto> readAllWithTags(Collection<Integer> tagIds) {
-
         WebTarget target = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         for (Integer tagId : tagIds) {
             target = target.queryParam("tags", tagId);
         }
 
-        System.out.println("DEBUG: " + target.getUri());
-
         Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
 
-        if (response.getStatus() == 200) {
-            return Arrays.asList(response.readEntity(FlashcardDto[].class));
-        } else {
-            throw new RuntimeException(response.getStatus() + " " + response.getStatusInfo().getReasonPhrase());
-        }
+        return Arrays.asList(response.readEntity(FlashcardDto[].class));
     }
 
-    public void update(FlashcardDto e) {
-        Invocation.Builder invocationBuilder = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE);
-        Entity<FlashcardDto> entity = Entity.entity(e, MediaType.APPLICATION_JSON_TYPE);
-
-        Response response = invocationBuilder.put(entity);
-
-        if (response.getStatus() > 200)
-            throw new BadRequestException(response.getStatusInfo().getReasonPhrase());
-    }
-
+//    public void update(FlashcardDto e) {
+//        Invocation.Builder invocationBuilder = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE);
+//        Entity<FlashcardDto> entity = Entity.entity(e, MediaType.APPLICATION_JSON_TYPE);
+//
+//        Response response = invocationBuilder.put(entity);
+//
+//        if (response.getStatus() > 200)
+//            throw new BadRequestException(response.getStatusInfo().getReasonPhrase());
+//    }
 
     public void delete(Long id) {
         Response response = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).path("/" + id).request(MediaType.APPLICATION_JSON_TYPE).delete();

@@ -19,10 +19,10 @@ import java.util.logging.Logger;
 @RequestMapping("/flashcards")
 public class FlashcardController {
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
-    private FlashcardClient flashcardClient;
-    private TagClient tagClient;
+    private final FlashcardClient flashcardClient;
+    private final TagClient tagClient;
 
     @Autowired
     public FlashcardController(FlashcardClient flashcardClient, TagClient tagClient) {

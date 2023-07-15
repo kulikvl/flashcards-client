@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 @RequestMapping("/register")
 public class RegistrationController {
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     @GetMapping("/showRegistrationForm")
     public String showRegistrationForm(Model model) {

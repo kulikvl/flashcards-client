@@ -19,6 +19,6 @@ public class AuthTokenImpl extends UsernamePasswordAuthenticationToken {
         super(principal, credentials, authorities);
     }
 
-    // TODO: Do Better way with tokens
+    // TODO: Do better with JWT tokens
     public String password;
 }

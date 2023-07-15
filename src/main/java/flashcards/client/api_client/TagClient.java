@@ -16,16 +16,11 @@ import java.util.Optional;
 @Component
 public class TagClient {
 
-    private Client client;
-
-    private String apiUrl;
-
-    private WebTarget baseEndpoint;
+    private final WebTarget baseEndpoint;
 
     @Autowired
     public TagClient(@Value("${server.url}") String apiUrl) {
-        this.apiUrl = apiUrl;
-        client = ClientBuilder.newClient();
+        Client client = ClientBuilder.newClient();
         client.register(new HttpBasicAuthFilter());
         baseEndpoint = client.target(apiUrl + "/users/{id}/tags");
     }
@@ -43,12 +38,7 @@ public class TagClient {
 
     public Collection<TagDto> readAll() {
         Response response = baseEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE).get();
-
-        if (response.getStatus() == 200) {
-            return Arrays.asList(response.readEntity(TagDto[].class));
-        } else {
-            throw new RuntimeException(response.getStatus() + " " + response.getStatusInfo().getReasonPhrase());
-        }
+        return Arrays.asList(response.readEntity(TagDto[].class));
     }
 
     public void delete(Integer id) {

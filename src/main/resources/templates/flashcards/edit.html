@@ -56,7 +56,7 @@
                         <div class="modal-body">
                             <div class="container">
                                 <div class="scrollable-div">
-                                    <div th:each="tag : ${tags}" class="card">
+                                    <div th:each="tag : ${tags}" class="card mb-3">
                                         <div class="card-body">
                                             <h5 class="card-title" th:text="${tag.name}"></h5>
                                             <form th:action="@{/tags/delete/{tagId}(tagId=${tag.getId()})}" method="post">

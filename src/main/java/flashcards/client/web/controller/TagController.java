@@ -18,7 +18,7 @@ import java.util.Set;
 @RequestMapping("/tags")
 public class TagController {
 
-    private TagClient tagClient;
+    private final TagClient tagClient;
 
     @Autowired
     public TagController(TagClient tagClient) {

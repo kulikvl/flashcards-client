@@ -48,7 +48,7 @@ public class RegistrationController {
         HttpEntity<UserDto> requestEntity = new HttpEntity<>(userDto, headers);
 
         try{
-            ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:8080/users/register", requestEntity, String.class);
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:8080/auth/register", requestEntity, String.class);
         } catch (HttpClientErrorException e) {
            // catch HTTP 4xx error server responds (our case is 409)
 

@@ -21,7 +21,7 @@ public class TagClient {
     @Autowired
     public TagClient(@Value("${server.url}") String apiUrl) {
         Client client = ClientBuilder.newClient();
-        client.register(new HttpBasicAuthFilter());
+        client.register(new JwtAuthFilter());
         baseEndpoint = client.target(apiUrl + "/users/{id}/tags");
     }
 

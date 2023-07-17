@@ -1,20 +1,15 @@
 package flashcards.client.api_client;
 
 import flashcards.client.model.UserDto;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 @Component
 public class UserClient {
@@ -24,7 +19,7 @@ public class UserClient {
     @Autowired
     public UserClient(@Value("${server.url}") String apiUrl) {
         Client client = ClientBuilder.newClient();
-        client.register(new HttpBasicAuthFilter());
+        client.register(new JwtAuthFilter());
         usersEndpoint = client.target(apiUrl + "/users");
     }
 

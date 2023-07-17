@@ -21,7 +21,7 @@ public class FlashcardClient {
     @Autowired
     public FlashcardClient(@Value("${server.url}") String apiUrl) {
         Client client = ClientBuilder.newClient();
-        client.register(new HttpBasicAuthFilter());
+        client.register(new JwtAuthFilter());
         flashcardsEndpoint = client.target(apiUrl + "/users/{id}/flashcards");
     }
 

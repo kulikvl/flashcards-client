@@ -1,6 +1,6 @@
 package flashcards.client.web.controller;
 
-import flashcards.client.config.AuthTokenImpl;
+import flashcards.client.config.JwtAuthToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,10 +24,10 @@ public class LoginController {
         return "auth/access-denied";
     }
 
-    @GetMapping("/authInfo")
+    @GetMapping("/auth-info")
     public String info() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        logger.info("Auth info: " + auth.getPrincipal().toString() + "/" + ((AuthTokenImpl) auth).password);
+        logger.info("Auth info: " + auth.getPrincipal() + "/" + ((JwtAuthToken)auth).getJwtToken());
         return "index";
     }
 

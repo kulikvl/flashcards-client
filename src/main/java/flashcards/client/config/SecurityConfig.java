@@ -22,7 +22,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http    .authorizeRequests()
                 .antMatchers("/users", "/users/**").hasRole("ADMIN")
                 .antMatchers("/register/**").permitAll()
@@ -32,10 +31,7 @@ public class SecurityConfig {
                 .formLogin().loginPage("/login").loginProcessingUrl("/authenticateUser").defaultSuccessUrl("/").permitAll()
                 .and()
                 .logout((logout) -> logout.logoutSuccessUrl("/login?logout").permitAll())
-                //.logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").deleteCookies("remove").invalidateHttpSession(true)
-                //.and()
                 .exceptionHandling().accessDeniedPage("/access-denied");
-
 
         return http.build();
     }

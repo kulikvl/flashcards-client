@@ -14,8 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import javax.validation.constraints.Null;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -40,6 +38,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         String jwtToken = null;
 
+        // get JWT token (string)
         try {
             UserDto userDto = new UserDto(inputUsername, inputPassword);
             RestTemplate restTemplate = new RestTemplate();
@@ -72,6 +71,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             return null;
         }
 
+        // get roles (authorities) of the user in order to create JwtAuthToken object
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();

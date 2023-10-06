@@ -1,15 +1,11 @@
 package flashcards.client.web.controller;
 
 import flashcards.client.api_client.TagClient;
-import flashcards.client.model.FlashcardDto;
 import flashcards.client.model.TagDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

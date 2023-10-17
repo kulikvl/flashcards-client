@@ -24,15 +24,17 @@ public class TagClient {
         baseEndpoint = client.target(apiUrl + "/users/{id}/tags");
     }
 
-    public TagDto create(TagDto e) {
+    public void create(TagDto e) {
         // if the tag with the same name already exists => use it
         Optional<TagDto> foundTag = readAll().stream().filter(tag -> tag.getName().equals(e.getName())).findFirst();
-        if (foundTag.isPresent())
-            return foundTag.get();
+        if (foundTag.isPresent()) {
+            //foundTag.get();
+            return;
+        }
 
         Invocation.Builder invocationBuilder = baseEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE);
         Entity<TagDto> entity = Entity.entity(e, MediaType.APPLICATION_JSON_TYPE);
-        return invocationBuilder.post(entity, TagDto.class);
+        invocationBuilder.post(entity, TagDto.class);
     }
 
     public Collection<TagDto> readAll() {
@@ -40,8 +42,25 @@ public class TagClient {
         return Arrays.asList(response.readEntity(TagDto[].class));
     }
 
+    public Collection<TagDto> readAllFrom(String username) {
+        Response response = baseEndpoint.resolveTemplate("id", username).request(MediaType.APPLICATION_JSON_TYPE).get();
+        return Arrays.asList(response.readEntity(TagDto[].class));
+    }
+
     public void delete(Integer id) {
-        Response response = baseEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).path("/" + id).request(MediaType.APPLICATION_JSON_TYPE).delete();
+        baseEndpoint
+                .resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .path("/" + id)
+                .request()
+                .delete();
+    }
+
+    public void deleteFrom(Integer id, String username) {
+        baseEndpoint
+                .resolveTemplate("id", username)
+                .path("/" + id)
+                .request()
+                .delete();
     }
 
 }

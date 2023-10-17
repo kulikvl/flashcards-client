@@ -24,10 +24,10 @@ public class FlashcardClient {
         flashcardsEndpoint = client.target(apiUrl + "/users/{id}/flashcards");
     }
 
-    public FlashcardDto create(FlashcardDto e) {
+    public void create(FlashcardDto e) {
         Invocation.Builder invocationBuilder = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE);
         Entity<FlashcardDto> entity = Entity.entity(e, MediaType.APPLICATION_JSON_TYPE);
-        return invocationBuilder.post(entity, FlashcardDto.class);
+        invocationBuilder.post(entity, FlashcardDto.class);
     }
 
     public Collection<FlashcardDto> readAll() {
@@ -35,8 +35,14 @@ public class FlashcardClient {
         return Arrays.asList(response.readEntity(FlashcardDto[].class));
     }
 
+    public Collection<FlashcardDto> readAllFrom(String username) {
+        Response response = flashcardsEndpoint.resolveTemplate("id", username).request(MediaType.APPLICATION_JSON_TYPE).get();
+        return Arrays.asList(response.readEntity(FlashcardDto[].class));
+    }
+
     public Collection<FlashcardDto> readAllWithTags(Collection<Integer> tagIds) {
-        WebTarget target = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        WebTarget target = flashcardsEndpoint
+                .resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
         for (Integer tagId : tagIds) {
             target = target.queryParam("tags", tagId);
@@ -47,6 +53,7 @@ public class FlashcardClient {
         return Arrays.asList(response.readEntity(FlashcardDto[].class));
     }
 
+// current client does not need update operation
 //    public void update(FlashcardDto e) {
 //        Invocation.Builder invocationBuilder = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE);
 //        Entity<FlashcardDto> entity = Entity.entity(e, MediaType.APPLICATION_JSON_TYPE);
@@ -58,12 +65,27 @@ public class FlashcardClient {
 //    }
 
     public void delete(Long id) {
-        Response response = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).path("/" + id).request(MediaType.APPLICATION_JSON_TYPE).delete();
+        flashcardsEndpoint
+                .resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .path("/" + id)
+                .request()
+                .delete();
+    }
+
+    public void deleteFrom(Long id, String username) {
+        flashcardsEndpoint
+                .resolveTemplate("id", username)
+                .path("/" + id)
+                .request()
+                .delete();
     }
 
     public void addTagToFlashcard(Long flashcardId, Integer tagId) {
-        Response response = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
-                .path("/" + flashcardId + "/tags/" + tagId).request(MediaType.APPLICATION_JSON_TYPE).post(null);
+        Response response = flashcardsEndpoint
+                .resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .path("/" + flashcardId + "/tags/" + tagId)
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .post(null);
 
         if (response.getStatus() > 200)
             throw new BadRequestException(response.getStatusInfo().getReasonPhrase());

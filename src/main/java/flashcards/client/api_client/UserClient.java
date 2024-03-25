@@ -37,10 +37,6 @@ public class UserClient {
         return Arrays.asList(response.readEntity(UserDto[].class));
     }
 
-//    public void delete(String username) {
-//        Response response = usersEndpoint.path("/" + username).request(MediaType.APPLICATION_JSON_TYPE).delete();
-//    }
-
     // complex operation on the client side
     public void delete(String username) {
         // currently authenticated user can't delete himself

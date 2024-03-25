@@ -9,7 +9,7 @@ import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
 /**
- * Filter: add the authorization header to requests to the REST API Server, IF the user is authenticated
+ * The purpose of this filter is to add the authorization header to requests to the REST API Server, if the user is authenticated
  */
 @Provider
 public class JwtAuthFilter implements ClientRequestFilter {

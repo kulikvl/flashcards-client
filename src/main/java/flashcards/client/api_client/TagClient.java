@@ -25,10 +25,9 @@ public class TagClient {
     }
 
     public void create(TagDto e) {
-        // if the tag with the same name already exists => use it
+        // if the tag with the same name already exists => use it instead of creating a new one
         Optional<TagDto> foundTag = readAll().stream().filter(tag -> tag.getName().equals(e.getName())).findFirst();
         if (foundTag.isPresent()) {
-            //foundTag.get();
             return;
         }
 

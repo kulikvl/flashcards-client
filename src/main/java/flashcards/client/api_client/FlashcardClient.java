@@ -53,17 +53,6 @@ public class FlashcardClient {
         return Arrays.asList(response.readEntity(FlashcardDto[].class));
     }
 
-// current client does not need update operation
-//    public void update(FlashcardDto e) {
-//        Invocation.Builder invocationBuilder = flashcardsEndpoint.resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).request(MediaType.APPLICATION_JSON_TYPE);
-//        Entity<FlashcardDto> entity = Entity.entity(e, MediaType.APPLICATION_JSON_TYPE);
-//
-//        Response response = invocationBuilder.put(entity);
-//
-//        if (response.getStatus() > 200)
-//            throw new BadRequestException(response.getStatusInfo().getReasonPhrase());
-//    }
-
     public void delete(Long id) {
         flashcardsEndpoint
                 .resolveTemplate("id", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
